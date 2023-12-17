@@ -24,7 +24,7 @@ class Analyzer:
 
     def _fetch_from_file(self, path):
         with open(path, mode="r") as f:
-            rows = [row.rstrip() for row in f.readlines()][1:]
+            rows = [row.rstrip() for row in f.readlines() if row.split(",")[1] != "閉鎖"][1:]
         return rows
 
     def _print_about(self):
