@@ -1,0 +1,2 @@
+# slot_analyzer
+スロットアナライザー
