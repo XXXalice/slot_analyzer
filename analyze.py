@@ -5,14 +5,10 @@ class Analyzer:
     def __init__(self):
         self.version = "0.1.0"
         self.dir_name = "files"
-
         self._print_about()
 
-        rows = self._collect_datas()
 
-
-
-    def _collect_datas(self):
+    def collect_datas(self):
         print("csvファイルをロードします")
         files = os.listdir(f"./{self.dir_name}")
         files = [file for file in files if file[-3:] == "csv"]
@@ -20,6 +16,14 @@ class Analyzer:
         for fname in tqdm(files):
             path = f"./{self.dir_name}/{fname}"
             rows.append(self._fetch_from_file(path))
+        print("データのロードに成功しました")
+        return rows
+
+    def total(self, rows):
+        data_dict = {}
+        for row in rows:
+            items = row.split(",")
+
 
 
     def _fetch_from_file(self, path):
@@ -34,6 +38,7 @@ class Analyzer:
 
 def main():
     analyzer = Analyzer()
+    rows = analyzer.collect_datas()
 
 
 
