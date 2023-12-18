@@ -52,7 +52,7 @@ class Analyzer:
             # 差枚数
             diff = int(items[4])
             # 機械割  (G数3)+(差枚数))/(G数3)
-            ratio = (game_num * 3 + diff) / game_num * 3
+            ratio = (game_num * 3 + diff) / (game_num * 3)
             if slot_name not in data_dict:
                 data_dict[slot_name] = {}
             data_dict[slot_name][timestamp] = ratio
@@ -85,7 +85,6 @@ def main():
     analyzer = Analyzer()
     rows = analyzer.collect_datas()
     data_dict = analyzer.get_value_ratio_at_machine(rows=rows)
-    # pprint.pp(data_dict)
     analyzer.to_csv(data_dict=data_dict)
 
 
