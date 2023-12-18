@@ -1,3 +1,5 @@
+import pprint
+
 from tqdm import tqdm
 import os
 import itertools
@@ -51,9 +53,21 @@ class Analyzer:
             diff = int(items[4])
             # 機械割  (G数3)+(差枚数))/(G数3)
             ratio = (game_num * 3 + diff) / game_num * 3
-            if data_dict
+            if slot_name not in data_dict:
+                data_dict[slot_name] = {}
             data_dict[slot_name][timestamp] = ratio
         return data_dict
+
+    # /     , 2023-01-01, 2023-01-02
+    # aaa_12, 98        , 99
+    # aaa_13, 100       , 70
+    def to_csv(self, data_dict, fname="統計データ.csv"):
+        # データに存在する日付
+        valid_date_list = [list(slot_param.keys()) for slot_param in data_dict.values()]
+        valid_date_list_flatten = sorted(set(itertools.chain.from_iterable(valid_date_list)))
+        with open(f"./{fname}", mode="w") as f:
+            column = ["機種名_台番号↓/日付→"] + valid_date_list_flatten
+            f.write(",".join(column) + "\n")
 
 
     def _fetch_from_file(self, path):
@@ -70,8 +84,9 @@ class Analyzer:
 def main():
     analyzer = Analyzer()
     rows = analyzer.collect_datas()
-    data_dict = analyzer.get_value_ratio_at_machine(rows)
-    print(data_dict)
+    data_dict = analyzer.get_value_ratio_at_machine(rows=rows)
+    # pprint.pp(data_dict)
+    analyzer.to_csv(data_dict=data_dict)
 
 
 if __name__ == '__main__':
