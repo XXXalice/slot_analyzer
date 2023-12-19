@@ -69,6 +69,15 @@ class Analyzer:
             column = ["機種名_台番号↓/日付→"] + valid_date_list_flatten
             f.write(",".join(column) + "\n")
 
+            # 縦軸
+            slot_names = list(data_dict.keys())
+            rows = []
+            for slot_name in slot_names:
+                rows.append(slot_name)
+                slot_data = data_dict.get(slot_name)
+                pprint.pp(slot_data)
+
+
 
     def _fetch_from_file(self, path):
         with open(path, mode="r") as f:
