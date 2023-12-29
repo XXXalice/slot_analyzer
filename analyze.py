@@ -65,22 +65,32 @@ class Analyzer:
         # データに存在する日付
         valid_date_list = [list(slot_param.keys()) for slot_param in data_dict.values()]
         valid_date_list_flatten = sorted(set(itertools.chain.from_iterable(valid_date_list)))
-        with open(f"./{fname}", mode="w") as f:
+        with open(f"./{fname}", mode="w", encoding="utf-8") as f:
             column = ["機種名_台番号↓/日付→"] + valid_date_list_flatten
             f.write(",".join(column) + "\n")
 
             # 縦軸
-            slot_names = list(data_dict.keys())
-            rows = []
-            for slot_name in slot_names:
+            slot_specs = list(data_dict.keys())
+            for slot_name in slot_specs:
+                rows = []
                 rows.append(slot_name)
-                slot_data = data_dict.get(slot_name)
-                pprint.pp(slot_data)
+                slot_data_dict = data_dict.get(slot_name)
+                # 横列
+                slot_spec_data_list = []
+                for valid_date in valid_date_list_flatten:
+                    if valid_date in slot_data_dict.keys():
+                        # valid_date（例2023-11-11）に該当するマシンのデータがあった場合
+                        slot_spec_data_list.append(str(slot_data_dict[valid_date]))
+                    else:
+                        # valid_date（例2023-11-11）に該当するマシンのデータがなかった場合
+                        slot_spec_data_list.append("-")
 
+                slot_row = rows + slot_spec_data_list
+                f.write(",".join(slot_row) + "\n")
 
 
     def _fetch_from_file(self, path):
-        with open(path, mode="r") as f:
+        with open(path, mode="r", encoding="utf-8") as f:
             rows = [row.rstrip() for row in f.readlines() if row.split(",")[1] != "閉鎖"][1:]
         return rows
 
