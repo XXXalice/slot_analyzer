@@ -58,6 +58,32 @@ class Analyzer:
             data_dict[slot_name][timestamp] = ratio
         return data_dict
 
+    # get_value_ratio_at_machine()のパーセンテージver
+    def get_value_ratio_percent_at_machine(self, rows, dcm_place=1):
+        data_dict = {}
+        for row in rows:
+            items = row.split(",")
+            # タイトル
+            slot_title = items[1]
+            # 台番号
+            slot_id = items[2]
+            slot_name = f"{slot_title}_{slot_id}"
+            # 日付
+            timestamp = items[0]
+            # g数
+            game_num = int(items[3])
+            if game_num == 0:
+                continue
+            # 差枚数
+            diff = int(items[4])
+            # 機械割  (G数3)+(差枚数))/(G数3)
+            ratio = (game_num * 3 + diff) / (game_num * 3)
+            percent = round(ratio * 100, dcm_place)
+            if slot_name not in data_dict:
+                data_dict[slot_name] = {}
+            data_dict[slot_name][timestamp] = percent
+        return data_dict
+
     # /     , 2023-01-01, 2023-01-02
     # aaa_12, 98        , 99
     # aaa_13, 100       , 70
@@ -103,7 +129,7 @@ class Analyzer:
 def main():
     analyzer = Analyzer()
     rows = analyzer.collect_datas()
-    data_dict = analyzer.get_value_ratio_at_machine(rows=rows)
+    data_dict = analyzer.get_value_ratio_percent_at_machine(rows=rows)
     analyzer.to_csv(data_dict=data_dict)
 
 
