@@ -6,7 +6,7 @@ import itertools
 
 class Analyzer:
     def __init__(self, dir_path="files"):
-        self.version = "0.1.0"
+        self.version = "0.1.1"
         self.dir_name = dir_path
         self._print_about()
 
