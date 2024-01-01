@@ -84,6 +84,32 @@ class Analyzer:
             data_dict[slot_name][timestamp] = percent
         return data_dict
 
+    # 機種番号ではなくタイトルで様って出す
+    def get_get_value_ratio_percent_at_title(self, rows, dcm_place=1):
+        data_dict = {}
+        for row in rows:
+            items = row.split(",")
+            # タイトル
+            slot_title = items[1]
+            # 日付
+            timestamp = items[0]
+            # g数
+            game_num = int(items[3])
+            if game_num == 0:
+                continue
+
+            # 差枚数
+            diff = int(items[4])
+            # 機械割  (G数3)+(差枚数))/(G数3)
+            ratio = (game_num * 3 + diff) / (game_num * 3)
+            percent = round(ratio * 100, dcm_place)
+            if slot_title not in data_dict:
+                data_dict[slot_title] = {}
+                data_dict[slot_title][timestamp] = percent
+
+            return data_dict
+
+
     # /     , 2023-01-01, 2023-01-02
     # aaa_12, 98        , 99
     # aaa_13, 100       , 70
