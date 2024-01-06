@@ -90,8 +90,16 @@ class Analyzer:
 
         return result_rows
 
-    def to_csv(self, path="./統計データ_総合版.csv", result_rows):
+    def to_csv(self, result_rows, path="./統計データ_総合版.csv"):
+        header_row = [].append(self._get_header_row())
+        csv_rows = header_row + result_rows
+
         with open(path, mode="w", encoding="utf-8") as f:
+            for csv_row in csv_rows:
+                f.write(csv_row + "\n")
+
+        print("ファイル生成が正常に完了しました。")
+
 
 
     def _fetch_from_file(self, path):
@@ -127,4 +135,4 @@ if __name__ == '__main__':
     analyzer = Analyzer()
     rows = analyzer.collect_datas()
     result_rows = analyzer.calcurate_rows(rows=rows)
-    pprint.pprint(result_rows)
+    analyzer.to_csv(result_rows=result_rows)
