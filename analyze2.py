@@ -6,7 +6,7 @@ import itertools
 
 class Analyzer:
     def __init__(self, dir_path="files"):
-        self.version = "0.2.0"
+        self.version = "0.1.0"
         self.dir_name = dir_path
         self._print_about()
 
@@ -91,7 +91,7 @@ class Analyzer:
         return result_rows
 
     def to_csv(self, result_rows, path="./統計データ_総合版.csv"):
-        header_row = [].append(self._get_header_row())
+        header_row = [self._get_header_row()]
         csv_rows = header_row + result_rows
 
         with open(path, mode="w", encoding="utf-8") as f:
@@ -128,7 +128,7 @@ class Analyzer:
 
 
     def _print_about(self):
-        print("スロットアナライザー")
+        print("スロットアナライザー統合版")
         print(f"ver {self.version}")
 
 if __name__ == '__main__':
