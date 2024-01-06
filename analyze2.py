@@ -123,7 +123,7 @@ class Analyzer:
 
     def _get_header_row(self):
         return ",".join([
-            "機種名", "G数", "差枚", "BB", "RB", "BB確率", "RB確率", "機械割", "総G数", "総差枚"
+            "機種名", "G数", "差枚", "BB", "RB", "BB確率", "RB確率", "合成確率", "機械割", "総G数", "総差枚"
         ])
 
 
