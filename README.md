@@ -35,4 +35,4 @@ python analyze.py
 
 `analyze2.py`をコピって`analyze.py`と同様のフォルダに配置してください
 
-使い方は通常版と同様ですが、実行する時のみ```python analyzer2.py```と入力してください。
+使い方は通常版と同様ですが、実行する時のみ```python analyze2.py```と入力してください。

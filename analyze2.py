@@ -6,7 +6,7 @@ import itertools
 
 class Analyzer:
     def __init__(self, dir_path="files"):
-        self.version = "0.1.0"
+        self.version = "0.1.1"
         self.dir_name = dir_path
         self._print_about()
 
@@ -65,7 +65,7 @@ class Analyzer:
             #RB確率
             rb_probability_result = 0 if rb_result == 0 else round(game_num_result / rb_result, 1)
             #合成確率
-            total_probability_result = round(game_num_result / (bb_result + rb_result), 1)
+            total_probability_result = 0 if rb_result == 0 else round(game_num_result / (bb_result + rb_result), 1)
             #機械割
             rate_result = round((game_num_result * 3 + diff_result) / (game_num_result * 3) * 100, 1)
             #総G数
