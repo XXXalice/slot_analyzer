@@ -67,7 +67,7 @@ class Analyzer:
             #合成確率
             total_probability_result = 0 if rb_result == 0 else round(game_num_result / (bb_result + rb_result), 1)
             #機械割
-            rate_result = round((game_num_result * 3 + diff_result) / (game_num_result * 3) * 100, 1)
+            rate_result = 0 if game_num_result == 0 else round((game_num_result * 3 + diff_result) / (game_num_result * 3) * 100, 1)
             #総G数
             total_game_num_result = sum(game_num_at_slot)
             #総差枚
@@ -111,7 +111,7 @@ class Analyzer:
     # slot名のリスト返却
     def _get_slot_name_list(self, rows):
         slot_name_list = []
-        '2023-11-01,アイムジャグラーEX-TP,560,7374,-100,22,25,1/156.9,1/335.2,1/295.0'
+        # 2023-11-01,アイムジャグラーEX-TP,560,7374,-100,22,25,1/156.9,1/335.2,1/295.0
         for row in rows:
             slot_name = row.split(",")[1]
             if slot_name not in slot_name_list:
