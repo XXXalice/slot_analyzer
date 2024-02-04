@@ -23,7 +23,18 @@ class Analyzer:
         print("データのロードに成功しました")
         return list(itertools.chain.from_iterable(rows))
 
+    # 台基準で表を作成
+    def calcurate_rows_at_machine(self, rows):
+        print("生成するファイルに載せる値を算出します")
+        result_rows = []
+        # rowをひとつづつ計算させて最終形にする
+        for row in rows:
+            items = row.split(",")
 
+            #左軸
+            result_rows = f"{items[2]}_({items[1]})"
+
+    # タイトル基準で表を作成
     def calcurate_rows(self, rows):
         print("生成するファイルに載せる値を算出します")
         slot_name_list = self._get_slot_name_list(rows=rows)
@@ -34,7 +45,6 @@ class Analyzer:
             diff_at_slot = []
             bb_at_slot = []
             rb_at_slot = []
-
 
             for row in rows:
                 row_list = row.split(",")
@@ -134,5 +144,5 @@ class Analyzer:
 if __name__ == '__main__':
     analyzer = Analyzer()
     rows = analyzer.collect_datas()
-    result_rows = analyzer.calcurate_rows(rows=rows)
-    analyzer.to_csv(result_rows=result_rows)
+    result_rows = analyzer.calcurate_rows_at_machine(rows=rows)
+    # analyzer.to_csv(result_rows=result_rows)
