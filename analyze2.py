@@ -5,9 +5,10 @@ import os
 import itertools
 
 class Analyzer:
-    def __init__(self, dir_path="files"):
+    def __init__(self, mode=0, dir_path="files"):
         self.version = "0.1.2"
         self.dir_name = dir_path
+        self.mode = mode
         self._print_about()
 
 
@@ -28,11 +29,40 @@ class Analyzer:
         print("生成するファイルに載せる値を算出します")
         result_rows = []
         # rowをひとつづつ計算させて最終形にする
-        for row in rows:
+        for row in tqdm(rows):
             items = row.split(",")
 
             #左軸
-            result_rows = f"{items[2]}_({items[1]})"
+            title = f"{items[2]}_({items[1]})"
+            game_num = int(items[3])
+            diff = int(items[4])
+            bb = int(items[5])
+            rb = int(items[6])
+            if bb == 0 or rb == 0:
+                continue
+
+            bb_probability = round(game_num / bb, 1)
+            rb_probability = round(game_num / rb, 1)
+            total_probability = round(game_num / (bb + rb), 1)
+            rate = round((game_num * 3 + diff) / (game_num * 3) * 100, 1)
+
+            result_rows.append(
+                ",".join([
+                    str(title),
+                    str(game_num),
+                    str(diff),
+                    str(bb),
+                    str(rb),
+                    str(bb_probability),
+                    str(rb_probability),
+                    str(total_probability),
+                    str(rate),
+                    str(game_num),
+                    str(diff)
+                ])
+            )
+
+        return result_rows
 
     # タイトル基準で表を作成
     def calcurate_rows(self, rows):
@@ -141,8 +171,21 @@ class Analyzer:
         print("スロットアナライザー統合版")
         print(f"ver {self.version}")
 
+    def operation(self):
+        rows = self.collect_datas()
+        if self.mode == 1:
+            print("タイトルごとに集計します")
+            result_rows = self.calcurate_rows(rows=rows)
+        elif self.mode == 2:
+            print("台番号ごとに集計します")
+            result_rows = self.calcurate_rows_at_machine(rows=rows)
+        else:
+            print("モードを正しく指定してください")
+            exit(0)
+        self.to_csv(result_rows=result_rows)
+
 if __name__ == '__main__':
-    analyzer = Analyzer()
-    rows = analyzer.collect_datas()
-    result_rows = analyzer.calcurate_rows_at_machine(rows=rows)
-    # analyzer.to_csv(result_rows=result_rows)
+    mode = int(input("起動したいモードを選択してください タイトルごと:1 台番号ごと:2  :"))
+    analyzer = Analyzer(mode=mode)
+    analyzer.operation()
+
