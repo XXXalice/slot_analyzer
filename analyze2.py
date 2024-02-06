@@ -6,7 +6,7 @@ import itertools
 
 class Analyzer:
     def __init__(self, mode=0, dir_path="files"):
-        self.version = "0.2.0"
+        self.version = "0.3.0"
         self.dir_name = dir_path
         self.mode = mode
         self._print_about()
@@ -24,53 +24,16 @@ class Analyzer:
         print("データのロードに成功しました")
         return list(itertools.chain.from_iterable(rows))
 
-    # 台基準で表を作成
-    def calcurate_rows_at_machine(self, rows):
-        print("生成するファイルに載せる値を算出します")
-        result_rows = []
-        # rowをひとつづつ計算させて最終形にする
-        for row in tqdm(rows):
-            items = row.split(",")
-
-            #左軸
-            title = f"{items[2]}_({items[1]})"
-            game_num = int(items[3])
-            diff = int(items[4])
-            bb = int(items[5])
-            rb = int(items[6])
-            if bb == 0 or rb == 0:
-                continue
-
-            bb_probability = round(game_num / bb, 1)
-            rb_probability = round(game_num / rb, 1)
-            total_probability = round(game_num / (bb + rb), 1)
-            rate = round((game_num * 3 + diff) / (game_num * 3) * 100, 1)
-
-            result_rows.append(
-                ",".join([
-                    str(title),
-                    str(game_num),
-                    str(diff),
-                    str(bb),
-                    str(rb),
-                    str(bb_probability),
-                    str(rb_probability),
-                    str(total_probability),
-                    str(rate),
-                    str(game_num),
-                    str(diff)
-                ])
-            )
-
-        return result_rows
-
     # タイトル基準で表を作成
     def calcurate_rows(self, rows):
         print("生成するファイルに載せる値を算出します")
-        slot_name_list = self._get_slot_name_list(rows=rows)
+        if self.mode == 1:
+            slot_list = self._get_slot_name_list(rows=rows)
+        elif self.mode == 2:
+            slot_list = self._get_slot_number_list(rows=rows)
         # 全体の生成品
         result_rows = []
-        for slot_name in tqdm(slot_name_list):
+        for slot in tqdm(slot_list):
             game_num_at_slot = []
             diff_at_slot = []
             bb_at_slot = []
@@ -78,7 +41,7 @@ class Analyzer:
 
             for row in rows:
                 row_list = row.split(",")
-                row_slot_name = row_list[1]
+                row_slot = row_list[1] if self.mode == 1 else f"{row_list[2]}_({row_list[1]})"
                 row_game_num = row_list[3]
                 row_diff = row_list[4]
                 row_bb = row_list[5]
@@ -86,7 +49,7 @@ class Analyzer:
                 if row_bb == 0 or row_rb == 0:
                     continue
 
-                if slot_name == row_slot_name:
+                if slot == row_slot:
                     game_num_at_slot.append(int(row_game_num))
                     diff_at_slot.append(int(row_diff))
                     bb_at_slot.append(int(row_bb))
@@ -114,7 +77,7 @@ class Analyzer:
             total_diff_result = sum(diff_at_slot)
 
             items = ",".join([
-                str(slot_name),
+                str(slot),
                 str(game_num_result),
                 str(diff_result),
                 str(bb_result),
@@ -161,6 +124,18 @@ class Analyzer:
 
         return slot_name_list
 
+    # slot番号のリスト返却
+    def _get_slot_number_list(self, rows):
+        slot_number_list = []
+        for row in rows:
+            items = row.split(",")
+            slot_name = f"{items[2]}_({items[1]})"
+            if slot_name not in slot_number_list:
+                slot_number_list.append(slot_name)
+            else:
+                pass
+        return slot_number_list
+
     def _get_header_row(self):
         return ",".join([
             "機種名", "G数", "差枚", "BB", "RB", "BB確率", "RB確率", "合成確率", "機械割", "総G数", "総差枚"
@@ -178,7 +153,7 @@ class Analyzer:
             result_rows = self.calcurate_rows(rows=rows)
         elif self.mode == 2:
             print("台番号ごとに集計します")
-            result_rows = self.calcurate_rows_at_machine(rows=rows)
+            result_rows = self.calcurate_rows(rows=rows)
         else:
             print("モードを正しく指定してください")
             exit(0)
