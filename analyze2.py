@@ -24,7 +24,7 @@ class Analyzer:
         print("データのロードに成功しました")
         return list(itertools.chain.from_iterable(rows))
 
-    # タイトル基準で表を作成
+    #　表を作成
     def calcurate_rows(self, rows):
         print("生成するファイルに載せる値を算出します")
         if self.mode == 1:
